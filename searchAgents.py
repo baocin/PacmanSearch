@@ -326,9 +326,9 @@ class CornersProblem(search.SearchProblem):
             self.numCornersVisited+=1
             print("Corner Status:", self.cornerStatus)
         numCornersVisited = len(filter((lambda x: self.cornerStatus[x] is True), self.cornerStatus))
-        
-        # print numCornersVisited
-        # print filter((lambda x: x is True), self.cornerStatus)
+
+        print numCornersVisited
+        print filter((lambda x: x is True), self.cornerStatus)
         return numCornersVisited == 4
         #util.raiseNotDefined()
 
