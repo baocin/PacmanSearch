@@ -176,7 +176,7 @@ def uniformCostSearch(problem):
                 combinedActions = actions + [sAction]
                 #Sum the costs of the actions list so that we can appropriately 
                 #sort for the priority queue
-                combinedCost = problem.getCostOfActions(combinedActions) + sCost[0]
+                combinedCost = problem.getCostOfActions(combinedActions) + sCost
                 Q.push((sLocation, combinedActions, sCost), combinedCost)
                  
 

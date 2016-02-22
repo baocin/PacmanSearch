@@ -302,7 +302,7 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        return (self.startingPosition, [], (0, {self.corners[0]: False, self.corners[1]: False, self.corners[2]: False, self.corners[3]: False}))
+        return self.startingPosition, {self.corners[0]: False, self.corners[1]: False, self.corners[2]: False, self.corners[3]: False}, [], 0
         
 
     def isGoalState(self, state):
@@ -310,16 +310,15 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-
-        print "State:", state
+        # print "staute:", state
         if (len(state) == 2):
-            return False
+            location, cornerData = state
         else:
-            nextState, action, (cost, cornerData) = state
-            numVisited = len(filter((lambda x: cornerData[x] is True), cornerData.keys()))
-            print numVisited,
-            return (numVisited == 4)
-        #util.raiseNotDefined()
+            location, cornerData,_,_ = state
+        x,y = location
+        numVisited = len(filter((lambda x: cornerData[x] is True), cornerData.keys()))
+        print numVisited,
+        return (numVisited == 4)
 
     def getSuccessors(self, state):
         """
@@ -334,14 +333,13 @@ class CornersProblem(search.SearchProblem):
 
         #Taken from PositionSearchProblem
         successors = []
-        print "staate:", state
+        # print "staate:", state
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             if (len(state) == 2):
-                x,y = state
-                cornerData = self.cornerStatus
+                location, cornerData = state
             else:
-                x,y = state[0]
-                (cost, cornerData) = state[2]
+                location, cornerData,_,_ = state
+            x,y = location
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
@@ -349,15 +347,14 @@ class CornersProblem(search.SearchProblem):
                 nextState = (nextx, nexty)
                 cost = self.cost
                 #Union the current self.cornerStatus hashtable with the nextState
-                newCornerData = {}
-                for i in range(0,4):
-                    newCornerData[self.corners[i]] = cornerData[self.corners[i]] or nextState is self.corners[i]
-
-
+                newCornerData = cornerData
+                if nextState in self.corners:
+                    newCornerData[nextState] = True
+                # for i in range(0,4):
+                #     newCornerData[self.corners[i]] = cornerData[self.corners[i]] or nextState is self.corners[i]
 
                 #Current status of every corner is part of state
-                #cost doesn't matter...
-                successors.append( ( nextState, action, (cost, newCornerData)) )
+                successors.append( ( ((nextState), newCornerData) , action, cost) )
 
         self._expanded += 1 # DO NOT CHANGE
         # print "Successors:", successors
@@ -394,18 +391,18 @@ def cornersHeuristic(state, problem):
     admissible (as well as consistent).
     """
     "*** YOUR CODE HERE ***"
-    if state != None and len(state) == 2:
-        return 0
-
-    print "State: ", state
-    currentPosition, actions, (cost, cornerData) = state
+    if (len(state) == 2):
+        location, cornerData = state
+    else:
+        location, cornerData,_,_ = state
+    x,y = location
 
     #Be absolutely sure that the result number is less than the shortest path to the goal!
 
     #find positions of all corners that need to be visited
     nonVisitedCorners = filter((lambda x: cornerData[x] is False), cornerData.keys());
     if (len(nonVisitedCorners) == 0):
-        print "Program is done...."
+        print "At Goal:", location
         return 0
 
     #Calculate the distance between the currentPosition and all the remaining corners
@@ -415,9 +412,9 @@ def cornersHeuristic(state, problem):
     debug = ""
     distances = []
     for corner in nonVisitedCorners:
-        distances.append(util.manhattanDistance(currentPosition, corner))
-        debug += "\t" + str(corner) + ": " + str(util.manhattanDistance(currentPosition, corner)) + ""
-    # print debug
+        distances.append(util.manhattanDistance(location, corner))
+        debug += "\t" + str(corner) + ": " + str(util.manhattanDistance(location, corner)) + ""
+    print debug
 
     # maxDistance = util.manhattanDistance(currentPosition,nonVisitedCorners[0])
     # for corner in nonVisitedCorners:
@@ -425,7 +422,7 @@ def cornersHeuristic(state, problem):
     #     if maxDistance < distanceToCorner:
     #         maxDistance = distanceToCorner
 
-    return util.manhattanDistance(currentPosition, nonVisitedCorners[0])
+    return max(distances)
     # return 0
     
 
