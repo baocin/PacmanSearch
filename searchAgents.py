@@ -361,7 +361,8 @@ class CornersProblem(search.SearchProblem):
             if not self.walls[nextx][nexty]:
                 nextState = (nextx, nexty)
                 cost = 1
-                # if nextState in self.corners:
+                if nextState in self.corners:
+                    cost = 0
                 #     self.cornerStatus[nextState] = True
                 #     # self.numCornersVisited+=1
                 successors.append( ( nextState, action, cost) )
