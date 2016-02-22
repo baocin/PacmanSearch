@@ -319,12 +319,7 @@ class CornersProblem(search.SearchProblem):
         #         self.cornerCheck[state] = True
         #         self.numCornersVisited+=1
 
-        if state in self.corners:
-            print("At a corner:", state);
-            #update the corner status to True for this corner
-            self.cornerStatus[state] = True;
-            self.numCornersVisited+=1
-            print("Corner Status:", self.cornerStatus)
+
         numCornersVisited = len(filter((lambda x: self.cornerStatus[x] is True), self.cornerStatus))
 
         # print numCornersVisited
@@ -361,6 +356,12 @@ class CornersProblem(search.SearchProblem):
             if not self.walls[nextx][nexty]:
                 nextState = (nextx, nexty)
                 cost = 1
+                if nextState in self.corners:
+                    print("At a corner:", state);
+                    #update the corner status to True for this corner
+                    self.cornerStatus[state] = True;
+                    self.numCornersVisited+=1
+                    print("Corner Status:", self.cornerStatus)
                 if nextState in self.corners:
                     cost = 0
                 #     self.cornerStatus[nextState] = True
