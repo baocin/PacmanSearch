@@ -323,7 +323,8 @@ class CornersProblem(search.SearchProblem):
         numCornersVisited = len(filter((lambda x: self.cornerStatus[x] is True), self.cornerStatus))
 
         # print numCornersVisited
-        print "Corners Left", filter((lambda x: self.cornerStatus[x] is True), self.cornerStatus)
+        # print "Corners Left", filter((lambda x: self.cornerStatus[x] is True), self.cornerStatus)
+        print numCornersVisited,
         return numCornersVisited == 4
         #util.raiseNotDefined()
 
@@ -412,16 +413,23 @@ def cornersHeuristic(state, problem):
     if (nonVisitedCorners == 0):
         print "Program is done...."
 
+
     #Calculate the distance between the currentPosition and all the remaining corners
     #Find the distance from currentPosition to furthest corner
     #This must be less than the true cost
-    maxDistance = util.manhattanDistance(currentPosition, nonVisitedCorners[0])
+
+    distances = []
+    for corner in nonVisitedCorners:
+        distances.append(util.manhattanDistance(currentPosition, corner))
+
+
+    maxDistance = util.manhattanDistance(currentPosition,nonVisitedCorners[0])
     for corner in nonVisitedCorners:
         distanceToCorner = util.manhattanDistance(currentPosition,corner)
         if maxDistance < distanceToCorner:
             maxDistance = distanceToCorner
 
-    return maxDistance
+    return min(distances)
     
 
 
