@@ -120,7 +120,7 @@ def breadthFirstSearch(problem):
     data = util.Queue()
     #states are a combination of position and a the growing list of actions 
     #necessary to get to that position
-    data.push((problem.getStartState(),[], 0))
+    data.push((problem.getStartState(),[]))
     
     #The nodes in the graph that have been seen (but not necessarily)
     discovered = []
@@ -128,7 +128,7 @@ def breadthFirstSearch(problem):
     while not data.isEmpty():
         currentNode = data.pop()
         #break out the node into its parts for more readable code
-        location, actions, cost = currentNode
+        location, actions = currentNode
         
         if problem.isGoalState(location):
             return actions
@@ -138,11 +138,11 @@ def breadthFirstSearch(problem):
             discovered.append(location)   #Add it to the discovered list
             #Add all its children to the stack
             for successor in problem.getSuccessors(location):
-                sLocation, sAction, sCost = successor
+                sLocation, sAction, _ = successor
                 #Add the action of this node into the list of the parent so that
                 # we have a coherent list of what actions are needed to get back
                 # to this location
-                data.push((sLocation, actions + [sAction], sCost))
+                data.push((sLocation, actions + [sAction]))
 
 def uniformSortByCost_key(a):
     return a[2]
@@ -176,7 +176,10 @@ def uniformCostSearch(problem):
                 combinedActions = actions + [sAction]
                 #Sum the costs of the actions list so that we can appropriately 
                 #sort for the priority queue
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of 0d5eef5... Test
                 combinedCost = problem.getCostOfActions(combinedActions) + sCost
                 Q.push((sLocation, combinedActions, sCost), combinedCost)
                  
