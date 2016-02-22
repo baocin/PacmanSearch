@@ -311,15 +311,14 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        nonVisitedCorners = filter((lambda x: self.cornerStatus[x] is False), self.cornerStatus.keys());
-        if state in nonVisitedCorners:
-            #update the corner status to True for this corner
-            self.cornerStatus[state] = True;
-            print("Corner Status:", self.cornerStatus)
-        numVisited = len(filter((lambda x: self.cornerStatus[x] is True), self.cornerStatus))
-        # print numCornersVisited
-        # print "Corners Left", filter((lambda x: self.cornerStatus[x] is True), self.cornerStatus)
-        print numVisited,
+
+        # print "State:", state
+        if state != None and len(state) == 2:
+            return False
+
+        nextState, action, cornerData = state
+        numVisited = len(filter((lambda x: cornerData[x] is True), cornerData.keys()))
+        # print numVisited,
         return (numVisited == 4)
         #util.raiseNotDefined()
 
@@ -337,12 +336,22 @@ class CornersProblem(search.SearchProblem):
         #Taken from PositionSearchProblem
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            x,y = state
+            # print "state:", state
+            x,y = state[0:2]
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
-                nextState = (nextx, nexty)
+                #Union the current self.cornerStatus hashtable with the nextState
+                cornerData = {}
+                for i in range(0,4):
+                    cornerData[self.corners[i]] = self.cornerStatus[self.corners[i]] or (nextx, nexty) is self.corners[i]
+
+                nextState = (nextx, nexty, cornerData)
                 cost = self.cost
+
+
+                #Current status of every corner is part of state
+                #cost doesn't matter...
                 successors.append( ( nextState, action, cost) )
 
         self._expanded += 1 # DO NOT CHANGE
@@ -399,7 +408,7 @@ def cornersHeuristic(state, problem):
     for corner in nonVisitedCorners:
         distances.append(util.manhattanDistance(currentPosition, corner))
         debug += "\t" + str(corner) + ": " + str(util.manhattanDistance(currentPosition, corner)) + ""
-    print debug
+    # print debug
 
     # maxDistance = util.manhattanDistance(currentPosition,nonVisitedCorners[0])
     # for corner in nonVisitedCorners:
