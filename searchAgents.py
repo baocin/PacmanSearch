@@ -295,8 +295,6 @@ class CornersProblem(search.SearchProblem):
                              self.corners[1]: False,
                              self.corners[2]: False,
                              self.corners[3]: False}
-        #Easier to keep track of than counting
-        self.numCornersVisited = 0
 
     def getStartState(self):
         """
@@ -317,14 +315,12 @@ class CornersProblem(search.SearchProblem):
         if state in nonVisitedCorners:
             #update the corner status to True for this corner
             self.cornerStatus[state] = True;
-            self.numCornersVisited+=1
             print("Corner Status:", self.cornerStatus)
-        numCornersVisited = len(filter((lambda x: self.cornerStatus[x] is True), self.cornerStatus))
 
         # print numCornersVisited
         # print "Corners Left", filter((lambda x: self.cornerStatus[x] is True), self.cornerStatus)
         # print numCornersVisited,
-        return numCornersVisited == 4
+        return len(nonVisitedCorners) == 0
         #util.raiseNotDefined()
 
     def getSuccessors(self, state):
@@ -338,29 +334,15 @@ class CornersProblem(search.SearchProblem):
             is the incremental cost of expanding to that successor
         """
 
+        #Taken from PositionSearchProblem
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
-
-            "*** YOUR CODE HERE ***"
-            
-            #Taken from PositionSearchProblem
             x,y = state
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
                 nextState = (nextx, nexty)
-                cost = 1
-
-                if nextState in self.corners:
-                    cost = 1
-                #     self.cornerStatus[nextState] = True
-                #     # self.numCornersVisited+=1
+                cost = self.cost
                 successors.append( ( nextState, action, cost) )
 
         self._expanded += 1 # DO NOT CHANGE
@@ -407,7 +389,6 @@ def cornersHeuristic(state, problem):
     if (nonVisitedCorners == 0):
         print "Program is done...."
 
-
     #Calculate the distance between the currentPosition and all the remaining corners
     #Find the distance from currentPosition to furthest corner
     #This must be less than the true cost
@@ -425,7 +406,9 @@ def cornersHeuristic(state, problem):
     #     if maxDistance < distanceToCorner:
     #         maxDistance = distanceToCorner
 
-    return max(distances)
+    if len(distances) == 0:
+        return 0
+    return min(distances)
     
 
 
