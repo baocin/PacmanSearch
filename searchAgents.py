@@ -315,10 +315,9 @@ class CornersProblem(search.SearchProblem):
             location, cornerData = state
         else:
             location, cornerData,_,_ = state
-        x,y = location
         numVisited = len(filter((lambda x: cornerData[x] is True), cornerData.keys()))
         print numVisited,
-        return (numVisited == 4)
+        return location in self.corners and (numVisited == 4)
 
     def getSuccessors(self, state):
         """
@@ -522,7 +521,6 @@ def foodHeuristic(state, problem):
     # print foodList
     if not foodList:
         return 0
-    "*** YOUR CODE HERE ***"
    
     maxDistance = util.manhattanDistance(position,foodList[0])
     for corner in foodList:
