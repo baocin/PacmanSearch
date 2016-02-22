@@ -320,11 +320,17 @@ class CornersProblem(search.SearchProblem):
         #         self.numCornersVisited+=1
 
 
+        if state in self.corners:
+            print("At a corner:", state);
+            #update the corner status to True for this corner
+            self.cornerStatus[state] = True;
+            self.numCornersVisited+=1
+            print("Corner Status:", self.cornerStatus)
         numCornersVisited = len(filter((lambda x: self.cornerStatus[x] is True), self.cornerStatus))
 
         # print numCornersVisited
         # print "Corners Left", filter((lambda x: self.cornerStatus[x] is True), self.cornerStatus)
-        print numCornersVisited,
+        # print numCornersVisited,
         return numCornersVisited == 4
         #util.raiseNotDefined()
 
@@ -357,14 +363,9 @@ class CornersProblem(search.SearchProblem):
             if not self.walls[nextx][nexty]:
                 nextState = (nextx, nexty)
                 cost = 1
+
                 if nextState in self.corners:
-                    print("At a corner:", state);
-                    #update the corner status to True for this corner
-                    self.cornerStatus[state] = True;
-                    self.numCornersVisited+=1
-                    print("Corner Status:", self.cornerStatus)
-                if nextState in self.corners:
-                    cost = 0
+                    cost = 1
                 #     self.cornerStatus[nextState] = True
                 #     # self.numCornersVisited+=1
                 successors.append( ( nextState, action, cost) )
@@ -418,16 +419,18 @@ def cornersHeuristic(state, problem):
     #Find the distance from currentPosition to furthest corner
     #This must be less than the true cost
 
+    debug = ""
     distances = []
     for corner in nonVisitedCorners:
         distances.append(util.manhattanDistance(currentPosition, corner))
+        debug += "\t" + str(corner) + ": " + str(util.manhattanDistance(currentPosition, corner)) + ""
+    print debug
 
-
-    maxDistance = util.manhattanDistance(currentPosition,nonVisitedCorners[0])
-    for corner in nonVisitedCorners:
-        distanceToCorner = util.manhattanDistance(currentPosition,corner)
-        if maxDistance < distanceToCorner:
-            maxDistance = distanceToCorner
+    # maxDistance = util.manhattanDistance(currentPosition,nonVisitedCorners[0])
+    # for corner in nonVisitedCorners:
+    #     distanceToCorner = util.manhattanDistance(currentPosition,corner)
+    #     if maxDistance < distanceToCorner:
+    #         maxDistance = distanceToCorner
 
     return min(distances)
     
