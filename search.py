@@ -176,7 +176,8 @@ def uniformCostSearch(problem):
                 combinedActions = actions + [sAction]
                 #Sum the costs of the actions list so that we can appropriately 
                 #sort for the priority queue
-                combinedCost = problem.getCostOfActions(combinedActions) + sCost[0]
+
+                combinedCost = problem.getCostOfActions(combinedActions) + sCost
                 Q.push((sLocation, combinedActions, sCost), combinedCost)
                  
 
@@ -189,34 +190,60 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
     Q = util.PriorityQueue()
     #Need to calculate the heuristic for the initial state since it could matter
-    #Q.push((The begining position, the empty task list, the value of the current start state), and then the cost)
-    Q.push((problem.getStartState(),[],heuristic(problem.getStartState(), problem)), 0)
+    #Converted the queue into using a hashmap to make life a bit more modular for corneragent & foodagent
+    Q.push({
+        'location': problem.getStartState(),
+        'actions': [],
+        'cost': heuristic(problem.getStartState(), problem),
+        'data': {}
+    }, 0)
     discovered = []
 
     while not Q.isEmpty():
         currentNode = Q.pop()
-        location, actions, cost = currentNode   #explode into useful names
-        
+        print currentNode
+        # location, actions, cost = currentNode   #explode into useful names
+        # currentNode = {
+        #     'location': currentNode[0],
+        #     'actions': currentNode[1],
+        #     'cost': currentNode[2],
+        #     'data': {}
+        # }
         #Only terminate when dequeuing a goal
-        if problem.isGoalState(location):
-            return actions
+        if problem.isGoalState(currentNode['location']):
+            return currentNode['actions']
             
         #Prevents multiple copies of the same node being added to the queue
-        if location not in discovered:
-            discovered.append(location)
-            successors = problem.getSuccessors(location)
-            #sortedSuccessors = sorted(successors, key = lambda heu : (heu[2] + heuristic(heu[0], problem)), reverse = False)
+        if currentNode['location'] not in discovered:
+            discovered.append(currentNode['location'])
+            successors = problem.getSuccessors(currentNode['location'])
+
             for successor in successors:
-                sLocation, sAction, sCost = successor
+                newSuccessor['location'], newSuccessor['actions'], newSuccessor['cost'] = successor
+                if (len(successor) > 1):
+                    print "successor:", successor
+                    #using array, must convert
+                    newSuccessor = {
+                        'location': successor[0],
+                        'actions': successor[1],
+                        'cost': successor[2],
+                        'data': {}
+                    }
+                print newSuccessor
+
+
                 #merge the actions lists. Makes it easier to return result
-                combinedActions = actions + [sAction]
-                #Sum the costs of the actions list so that we can appropriately 
-                #sort for the priority queue
-                combinedCost = problem.getCostOfActions(combinedActions) + heuristic(sLocation, problem)
-                Q.push((sLocation, combinedActions, sCost), combinedCost)
+                combinedActions = currentNode['actions'] + [newSuccessor['actions']]
+                #Sum the costs of the actions list so that we can appropriately sort for the priority queue
+                combinedCost = problem.getCostOfActions(combinedActions) + heuristic(newSuccessor['location'], problem)
+                Q.push({
+                    'location': newSuccessor['actions'],
+                    'actions': combinedActions,
+                    'cost': combinedActions,
+                    'data': newSuccessor['data']
+                }, combinedCost)
 
 
 # Abbreviations
