@@ -415,13 +415,13 @@ def cornersHeuristic(state, problem):
     #Calculate the distance between the currentPosition and all the remaining corners
     #Find the distance from currentPosition to furthest corner
     #This must be less than the true cost
-    minDistance = util.manhattanDistance(currentPosition, nonVisitedCorners[0])
+    maxDistance = util.manhattanDistance(currentPosition, nonVisitedCorners[0])
     for corner in nonVisitedCorners:
         distanceToCorner = util.manhattanDistance(currentPosition,corner)
-        if minDistance < distanceToCorner:
-            minDistance = distanceToCorner
+        if maxDistance < distanceToCorner:
+            maxDistance = distanceToCorner
 
-    return minDistance
+    return maxDistance
     
 
 
@@ -517,7 +517,7 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     foodList = foodGrid.asList()
-    print foodList
+    # print foodList
     if not foodList:
         return 0
     "*** YOUR CODE HERE ***"
@@ -527,7 +527,6 @@ def foodHeuristic(state, problem):
         distanceToCorner = util.manhattanDistance(position,corner)
         if maxDistance < distanceToCorner:
             maxDistance = distanceToCorner
-
     return maxDistance
 
 class ClosestDotSearchAgent(SearchAgent):
