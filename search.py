@@ -130,8 +130,7 @@ def breadthFirstSearch(problem):
         #break out the node into its parts for more readable code
         location, actions = currentNode
         
-        if problem.isGoalState(location):
-            return actions
+
             
         #if this node is undiscovered then
         if location not in discovered:
@@ -143,6 +142,9 @@ def breadthFirstSearch(problem):
                 # we have a coherent list of what actions are needed to get back
                 # to this location
                 data.push((sLocation, actions + [sAction]))
+
+        if problem.isGoalState(location):
+            return actions
 
 def uniformSortByCost_key(a):
     return a[2]
