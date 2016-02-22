@@ -320,7 +320,7 @@ class CornersProblem(search.SearchProblem):
         #         self.numCornersVisited+=1
 
 
-        nonVisitedCorners = filter((lambda x: problem.cornerStatus[x] is False), problem.cornerStatus.keys());
+        nonVisitedCorners = filter((lambda x: self.cornerStatus[x] is False), self.cornerStatus.keys());
         if state in nonVisitedCorners:
             print("At a corner:", state);
             #update the corner status to True for this corner
