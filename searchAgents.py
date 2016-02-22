@@ -412,11 +412,11 @@ def cornersHeuristic(state, problem):
     #Calculate the distance between the currentPosition and all the remaining corners
     #Find the distance from currentPosition to furthest corner
     #This must be less than the true cost
-    maxDistance = util.manhattanDistance(currentPosition, nonVisitedCorners[0])
+    minDistance = util.manhattanDistance(currentPosition, nonVisitedCorners[0])
     for corner in nonVisitedCorners:
         distanceToCorner = util.manhattanDistance(currentPosition,corner)
-        if maxDistance > distanceToCorner:
-            maxDistance = distanceToCorner
+        if minDistance < distanceToCorner:
+            minDistance = distanceToCorner
 
     return maxDistance
     
