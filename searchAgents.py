@@ -291,12 +291,12 @@ class CornersProblem(search.SearchProblem):
         self.cost = 1
         print("Corners:", self.corners)
         #True if corner has been visited
-        self.cornerStatus = {corner[0]: False,
-                             corner[1]: False,
-                             corner[2]: False,
-                             corner[3]: False}
+        self.cornerStatus = {self.corners[0]: False,
+                             self.corners[1]: False,
+                             self.corners[2]: False,
+                             self.corners[3]: False}
         #Easier to keep track of than counting
-        # self.numCornersVisited = 0
+        self.numCornersVisited = 0
 
     def getStartState(self):
         """
@@ -323,11 +323,12 @@ class CornersProblem(search.SearchProblem):
             print("At a corner:", state);
             #update the corner status to True for this corner
             self.cornerStatus[state] = True;
+            self.numCornersVisited+=1
             print("Corner Status:", self.cornerStatus)
-        numCornersVisited = len(filter((lambda x: x is True), self.cornerStatus))
-        print numCornersVisited
-        print filter((lambda x: x is True), self.cornerStatus)
-        return self.numCornersVisited == 4
+        numCornersVisited = len(filter((lambda x: self.cornerStatus[x] is True), self.cornerStatus))
+        # print numCornersVisited
+        # print filter((lambda x: x is True), self.cornerStatus)
+        return numCornersVisited == 4
         #util.raiseNotDefined()
 
     def getSuccessors(self, state):
@@ -365,7 +366,7 @@ class CornersProblem(search.SearchProblem):
                 successors.append( ( nextState, action, cost) )
 
         self._expanded += 1 # DO NOT CHANGE
-        #print successors
+        # print successors
         return successors
 
     def getCostOfActions(self, actions):
@@ -376,7 +377,7 @@ class CornersProblem(search.SearchProblem):
         #Adapted from PositionSearchProblem
         totalCost = 0
         if actions == None: return 999999
-        # x,y= self.startingPosition
+        x,y= self.startingPosition
         for action in actions:
             dx, dy = Actions.directionToVector(action)
             x, y = int(x + dx), int(y + dy)
@@ -399,32 +400,24 @@ def cornersHeuristic(state, problem):
     admissible (as well as consistent).
     """
     "*** YOUR CODE HERE ***"
-    corners = problem.corners # These are the corner coordinates
-    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
     currentPosition = state
-    
-    #unVisitedCorners = []
-    #for k in problem.cornerCheck.keys():
-    #    if not problem.cornerCheck[k]:
-    #        unVisitedCorners.append(k)
-            
-    #print unVisitedCorners
-    
-    #Be absolutely sure that the result number is less than the shortest path to the goal
-    #I know it isn't optimal.
-    self.cornerStatus
 
+    #Be absolutely sure that the result number is less than the shortest path to the goal!
 
-    maxDistance = util.manhattanDistance(currentPosition,problem.corners[0])
-    for corner in problem.corners:
+    #find positions of all corners that need to be visited
+    nonVisitedCorners = filter((lambda x: problem.cornerStatus[x] is False), problem.cornerStatus.keys());
+    if (nonVisitedCorners == 0):
+        print "Program is done...."
+
+    #Calculate the distance between the currentPosition and all the remaining corners
+    #Find the distance from currentPosition to furthest corner
+    #This must be less than the true cost
+    maxDistance = util.manhattanDistance(currentPosition, nonVisitedCorners[0])
+    for corner in nonVisitedCorners:
         distanceToCorner = util.manhattanDistance(currentPosition,corner)
         if maxDistance > distanceToCorner:
             maxDistance = distanceToCorner
-            
-    #return maxDistance
 
-    #print maxDistance
-    #return len(unVisitedCorners)
     return maxDistance
     
 
