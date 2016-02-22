@@ -121,7 +121,7 @@ def breadthFirstSearch(problem):
     #states are a combination of position and a the growing list of actions 
     #necessary to get to that position
     data.push((problem.getStartState(),[], 0))
-    
+
     #The nodes in the graph that have been seen (but not necessarily)
     discovered = []
 
@@ -129,10 +129,10 @@ def breadthFirstSearch(problem):
         currentNode = data.pop()
         #break out the node into its parts for more readable code
         location, actions, cost = currentNode
-        
+
         if problem.isGoalState(location):
             return actions
-            
+
         #if this node is undiscovered then
         if location not in discovered:
             discovered.append(location)   #Add it to the discovered list
@@ -146,7 +146,7 @@ def breadthFirstSearch(problem):
 
 def uniformSortByCost_key(a):
     return a[2]
-    
+
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
@@ -160,11 +160,11 @@ def uniformCostSearch(problem):
     while not Q.isEmpty():
         currentNode = Q.pop()   #Get new node
         location, actions, cost = currentNode   #explode into useful names
-        
+
         #Only terminate when dequeuing a goal
         if problem.isGoalState(location):
             return actions
-            
+
         #Prevents multiple copies of the same node being added to the queue
         if location not in discovered:
             discovered.append(location)
@@ -174,11 +174,11 @@ def uniformCostSearch(problem):
                 sLocation, sAction, sCost = successor   #explode into names
                 #merge the actions lists. Makes it easier to return result
                 combinedActions = actions + [sAction]
-                #Sum the costs of the actions list so that we can appropriately 
+                #Sum the costs of the actions list so that we can appropriately
                 #sort for the priority queue
                 combinedCost = problem.getCostOfActions(combinedActions) + sCost
                 Q.push((sLocation, combinedActions, sCost), combinedCost)
-                 
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -199,11 +199,11 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     while not Q.isEmpty():
         currentNode = Q.pop()
         location, actions, cost = currentNode   #explode into useful names
-        
+
         #Only terminate when dequeuing a goal
         if problem.isGoalState(location):
             return actions
-            
+
         #Prevents multiple copies of the same node being added to the queue
         if location not in discovered:
             discovered.append(location)
@@ -213,7 +213,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 sLocation, sAction, sCost = successor
                 #merge the actions lists. Makes it easier to return result
                 combinedActions = actions + [sAction]
-                #Sum the costs of the actions list so that we can appropriately 
+                #Sum the costs of the actions list so that we can appropriately
                 #sort for the priority queue
                 combinedCost = problem.getCostOfActions(combinedActions) + heuristic(sLocation, problem)
                 Q.push((sLocation, combinedActions, sCost), combinedCost)

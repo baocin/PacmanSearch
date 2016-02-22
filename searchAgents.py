@@ -303,7 +303,7 @@ class CornersProblem(search.SearchProblem):
         """
         "*** YOUR CODE HERE ***"
         return self.startingPosition, {self.corners[0]: False, self.corners[1]: False, self.corners[2]: False, self.corners[3]: False}, [], 0
-        
+
 
     def isGoalState(self, state):
         """
