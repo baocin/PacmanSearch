@@ -418,7 +418,7 @@ def cornersHeuristic(state, problem):
         if minDistance < distanceToCorner:
             minDistance = distanceToCorner
 
-    return maxDistance
+    return minDistance
     
 
 
