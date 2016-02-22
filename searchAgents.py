@@ -316,11 +316,11 @@ class CornersProblem(search.SearchProblem):
             #update the corner status to True for this corner
             self.cornerStatus[state] = True;
             print("Corner Status:", self.cornerStatus)
-
+        numVisited = len(filter((lambda x: self.cornerStatus[x] is True), self.cornerStatus))
         # print numCornersVisited
         # print "Corners Left", filter((lambda x: self.cornerStatus[x] is True), self.cornerStatus)
-        # print numCornersVisited,
-        return len(nonVisitedCorners) == 0
+        print numVisited,
+        return (numVisited == 4)
         #util.raiseNotDefined()
 
     def getSuccessors(self, state):
@@ -386,8 +386,9 @@ def cornersHeuristic(state, problem):
 
     #find positions of all corners that need to be visited
     nonVisitedCorners = filter((lambda x: problem.cornerStatus[x] is False), problem.cornerStatus.keys());
-    if (nonVisitedCorners == 0):
+    if (len(nonVisitedCorners) == 0):
         print "Program is done...."
+        return 0
 
     #Calculate the distance between the currentPosition and all the remaining corners
     #Find the distance from currentPosition to furthest corner
@@ -406,9 +407,7 @@ def cornersHeuristic(state, problem):
     #     if maxDistance < distanceToCorner:
     #         maxDistance = distanceToCorner
 
-    if len(distances) == 0:
-        return 0
-    return min(distances)
+    return util.manhattanDistance(currentPosition, nonVisitedCorners[0])
     
 
 
