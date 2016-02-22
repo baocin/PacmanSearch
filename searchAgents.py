@@ -313,16 +313,8 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        #print "State: ", state
-        # for ()
-        # if state[0] in self.corners:
-        #         self.cornerCheck[state] = True
-        #         self.numCornersVisited+=1
-
-
         nonVisitedCorners = filter((lambda x: self.cornerStatus[x] is False), self.cornerStatus.keys());
         if state in nonVisitedCorners:
-            print("At a corner:", state);
             #update the corner status to True for this corner
             self.cornerStatus[state] = True;
             self.numCornersVisited+=1
@@ -433,7 +425,7 @@ def cornersHeuristic(state, problem):
     #     if maxDistance < distanceToCorner:
     #         maxDistance = distanceToCorner
 
-    return min(distances)
+    return max(distances)
     
 
 
